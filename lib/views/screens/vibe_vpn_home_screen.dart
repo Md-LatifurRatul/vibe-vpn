@@ -1,12 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:vibe_vpn/controllers/home_controller.dart';
 import 'package:vibe_vpn/core/constants/app_size.dart';
+import 'package:vibe_vpn/core/engine/vpn_engine.dart';
+import 'package:vibe_vpn/core/models/vpn_status.dart';
 import 'package:vibe_vpn/data/local/app_preferences.dart';
 import 'package:vibe_vpn/views/widgets/custom_widget.dart';
 import 'package:vibe_vpn/views/widgets/select_bottom_nav.dart';
 
 class VibeVpnHomeScreen extends StatelessWidget {
-  const VibeVpnHomeScreen({super.key});
+  VibeVpnHomeScreen({super.key});
+
+  final homeController = Get.put<HomeController>(HomeController());
 
   @override
   Widget build(BuildContext context) {
@@ -40,29 +45,54 @@ class VibeVpnHomeScreen extends StatelessWidget {
         children: [
           //! 2 rounded widget
           // Location + ping
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              CustomWidget(
-                titleText: "Location",
-                subTitleText: "FREE",
-                widgetWithIcon: CircleAvatar(
-                  radius: 32,
-                  backgroundColor: Colors.redAccent,
-                  child: Icon(Icons.flag_circle, size: 30, color: Colors.white),
+          Obx(
+            () => Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                CustomWidget(
+                  titleText:
+                      homeController.vpnInfo.value.countryLongName.isEmpty
+                          ? "Location"
+                          : homeController.vpnInfo.value.countryLongName,
+                  subTitleText: "FREE",
+                  widgetWithIcon: CircleAvatar(
+                    radius: 32,
+                    backgroundColor: Colors.redAccent,
+                    backgroundImage:
+                        homeController.vpnInfo.value.countryLongName.isEmpty
+                            ? null
+                            : AssetImage(
+                              "countryFlags/${homeController.vpnInfo.value.countryShortName.toLowerCase()}.png",
+                            ),
+                    child:
+                        homeController.vpnInfo.value.countryLongName.isEmpty
+                            ? Icon(
+                              Icons.flag_circle,
+                              size: 30,
+                              color: Colors.white,
+                            )
+                            : null,
+                  ),
                 ),
-              ),
 
-              CustomWidget(
-                titleText: "60 ms",
-                subTitleText: "ping",
-                widgetWithIcon: CircleAvatar(
-                  radius: 32,
-                  backgroundColor: Colors.black54,
-                  child: Icon(Icons.graphic_eq, size: 30, color: Colors.white),
+                CustomWidget(
+                  titleText:
+                      homeController.vpnInfo.value.countryLongName.isEmpty
+                          ? "60 ms"
+                          : "${homeController.vpnInfo.value.ping} ms",
+                  subTitleText: "PING",
+                  widgetWithIcon: CircleAvatar(
+                    radius: 32,
+                    backgroundColor: Colors.black54,
+                    child: Icon(
+                      Icons.graphic_eq,
+                      size: 30,
+                      color: Colors.white,
+                    ),
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
 
           //! button vpn
@@ -71,37 +101,43 @@ class VibeVpnHomeScreen extends StatelessWidget {
           //another 2 round widget
 
           // download + upload
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              CustomWidget(
-                titleText: "0 kbps",
-                subTitleText: "DOWNLOAD",
-                widgetWithIcon: CircleAvatar(
-                  radius: 32,
-                  backgroundColor: Colors.green,
-                  child: Icon(
-                    Icons.arrow_circle_down,
-                    size: 30,
-                    color: Colors.white,
+          StreamBuilder<VpnStatus?>(
+            initialData: VpnStatus(),
+            stream: VpnEngine.snapshotVpnStatus(),
+            builder: (context, dataSnapshot) {
+              return Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  CustomWidget(
+                    titleText: dataSnapshot.data?.byteIn ?? "0 kbps",
+                    subTitleText: "DOWNLOAD",
+                    widgetWithIcon: CircleAvatar(
+                      radius: 32,
+                      backgroundColor: Colors.green,
+                      child: Icon(
+                        Icons.arrow_circle_down,
+                        size: 30,
+                        color: Colors.white,
+                      ),
+                    ),
                   ),
-                ),
-              ),
 
-              CustomWidget(
-                titleText: "0 kbps",
-                subTitleText: "UPLOAD",
-                widgetWithIcon: CircleAvatar(
-                  radius: 32,
-                  backgroundColor: Colors.purpleAccent,
-                  child: Icon(
-                    Icons.arrow_circle_up_rounded,
-                    size: 30,
-                    color: Colors.white,
+                  CustomWidget(
+                    titleText: dataSnapshot.data?.byteOut ?? "0 kbps",
+                    subTitleText: "UPLOAD",
+                    widgetWithIcon: CircleAvatar(
+                      radius: 32,
+                      backgroundColor: Colors.purpleAccent,
+                      child: Icon(
+                        Icons.arrow_circle_up_rounded,
+                        size: 30,
+                        color: Colors.white,
+                      ),
+                    ),
                   ),
-                ),
-              ),
-            ],
+                ],
+              );
+            },
           ),
         ],
       ),
@@ -120,20 +156,24 @@ class VibeVpnHomeScreen extends StatelessWidget {
               padding: const EdgeInsets.all(18),
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
-                color: Colors.red,
+                color: homeController.getRoundVpnButtonColor.withValues(
+                  alpha: 0.1,
+                ),
               ),
               child: Container(
                 padding: const EdgeInsets.all(18),
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
-                  color: Colors.green,
+                  color: homeController.getRoundVpnButtonColor.withValues(
+                    alpha: 0.3,
+                  ),
                 ),
                 child: Container(
                   height: sizeScreen.height * .14,
                   width: sizeScreen.width * .14,
                   decoration: BoxDecoration(
                     shape: BoxShape.circle,
-                    color: Colors.pink,
+                    color: homeController.getRoundVpnButtonColor,
                   ),
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
@@ -145,7 +185,7 @@ class VibeVpnHomeScreen extends StatelessWidget {
                       ),
                       const SizedBox(height: 6),
                       Text(
-                        "Tap to Connect",
+                        homeController.getRoundVpnButonText,
 
                         style: TextStyle(
                           fontSize: 12,
