@@ -158,7 +158,7 @@ class VibeVpnHomeScreen extends StatelessWidget {
             },
             borderRadius: BorderRadius.circular(100),
             child: Container(
-              padding: const EdgeInsets.all(18),
+              padding: const EdgeInsets.all(16),
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
                 color: homeController.getRoundVpnButtonColor.withValues(
@@ -166,7 +166,7 @@ class VibeVpnHomeScreen extends StatelessWidget {
                 ),
               ),
               child: Container(
-                padding: const EdgeInsets.all(18),
+                padding: const EdgeInsets.all(16),
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
                   color: homeController.getRoundVpnButtonColor.withValues(
@@ -175,7 +175,7 @@ class VibeVpnHomeScreen extends StatelessWidget {
                 ),
                 child: Container(
                   height: sizeScreen.height * .14,
-                  width: sizeScreen.width * .14,
+                  width: sizeScreen.height * .14,
                   decoration: BoxDecoration(
                     shape: BoxShape.circle,
                     color: homeController.getRoundVpnButtonColor,
