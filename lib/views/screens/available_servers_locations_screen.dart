@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get_state_manager/src/rx_flutter/rx_obx_widget.dart';
 import 'package:vibe_vpn/controllers/vpn_location_controller.dart';
@@ -20,6 +21,19 @@ class AvailableServersLocationsScreen extends StatelessWidget {
           backgroundColor: Colors.redAccent,
           title: Text(
             "VPN Locations ${vpnLocationController.vpnFreeServerAvailableList.length} ",
+          ),
+        ),
+
+        floatingActionButton: Padding(
+          padding: const EdgeInsets.only(bottom: 10, right: 10),
+
+          child: FloatingActionButton(
+            onPressed: () {
+              vpnLocationController.retrieveVpnInformation();
+            },
+            backgroundColor: Colors.redAccent,
+
+            child: Icon(CupertinoIcons.refresh_circled, size: 40),
           ),
         ),
 

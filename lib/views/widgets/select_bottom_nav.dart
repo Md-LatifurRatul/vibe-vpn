@@ -1,6 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:vibe_vpn/core/constants/app_size.dart';
+import 'package:vibe_vpn/views/screens/available_servers_locations_screen.dart';
 
 class SelectBottomNav extends StatelessWidget {
   const SelectBottomNav({super.key});
@@ -11,7 +13,9 @@ class SelectBottomNav extends StatelessWidget {
       child: Semantics(
         button: true,
         child: InkWell(
-          onTap: () {},
+          onTap: () {
+            Get.to(() => AvailableServersLocationsScreen());
+          },
 
           child: Container(
             color: Colors.redAccent,
@@ -24,7 +28,7 @@ class SelectBottomNav extends StatelessWidget {
                 const SizedBox(width: 12),
 
                 Text(
-                  "Selec Country / Location",
+                  "Select Country / Location",
                   style: TextStyle(
                     color: Colors.white,
                     fontSize: 18,

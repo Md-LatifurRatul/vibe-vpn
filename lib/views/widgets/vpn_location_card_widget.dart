@@ -2,11 +2,13 @@ import 'dart:math';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:get/instance_manager.dart';
+import 'package:get/get.dart';
 import 'package:vibe_vpn/controllers/home_controller.dart';
 import 'package:vibe_vpn/core/constants/app_size.dart';
+import 'package:vibe_vpn/core/engine/vpn_engine.dart';
 import 'package:vibe_vpn/core/models/vpn_info.dart';
 import 'package:vibe_vpn/core/theme/app_theme.dart';
+import 'package:vibe_vpn/data/local/app_preferences.dart';
 
 class VpnLocationCardWidget extends StatelessWidget {
   const VpnLocationCardWidget({super.key, required this.vpnInfo});
@@ -35,7 +37,22 @@ class VpnLocationCardWidget extends StatelessWidget {
 
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
       child: InkWell(
-        onTap: () {},
+        onTap: () {
+          homeController.vpnInfo.value = vpnInfo;
+          AppPreferences.vpnInfoObj = vpnInfo;
+          Get.back();
+
+          if (homeController.vpnConnectionState.value ==
+              VpnEngine.vpnConnectedNow) {
+            VpnEngine.stopVpnNow();
+            Future.delayed(
+              Duration(seconds: 3),
+              () => homeController.connectToVpnNow(),
+            );
+          } else {
+            homeController.connectToVpnNow();
+          }
+        },
         borderRadius: BorderRadius.circular(16),
         child: ListTile(
           shape: RoundedRectangleBorder(

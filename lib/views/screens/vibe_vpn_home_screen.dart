@@ -15,6 +15,9 @@ class VibeVpnHomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    VpnEngine.snapshotVpnStage().listen((event) {
+      homeController.vpnConnectionState.value = event;
+    });
     sizeScreen = MediaQuery.of(context).size;
 
     return Scaffold(
@@ -96,7 +99,7 @@ class VibeVpnHomeScreen extends StatelessWidget {
           ),
 
           //! button vpn
-          vpnRoundButton(),
+          Obx(() => vpnRoundButton()),
 
           //another 2 round widget
 
@@ -150,7 +153,9 @@ class VibeVpnHomeScreen extends StatelessWidget {
         Semantics(
           button: true,
           child: InkWell(
-            onTap: () {},
+            onTap: () {
+              homeController.connectToVpnNow();
+            },
             borderRadius: BorderRadius.circular(100),
             child: Container(
               padding: const EdgeInsets.all(18),
