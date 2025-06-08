@@ -19,10 +19,10 @@ class AppPreferences {
   //! For saving single selected vpn details
 
   static VpnInfo get vpnInfoObj =>
-      VpnInfo.fromJson(jsonDecode(boxOfData.get('vpn') ?? {}));
+      VpnInfo.fromJson(jsonDecode(boxOfData.get('vpn') ?? '{}'));
 
   static set vpnInfoObj(VpnInfo value) =>
-      boxOfData.put("vpn", jsonEncode(value));
+      boxOfData.put('vpn', jsonEncode(value.toJson()));
 
   // ! For saving all vpn servers details
   static List<VpnInfo> get vpnList {

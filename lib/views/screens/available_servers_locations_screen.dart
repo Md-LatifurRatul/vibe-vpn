@@ -92,9 +92,8 @@ class AvailableServersLocationsScreen extends StatelessWidget {
       padding: const EdgeInsets.all(3),
 
       itemBuilder: (context, index) {
-        return VpnLocationCardWidget(
-          vpnInfo: vpnLocationController.vpnFreeServerAvailableList[index],
-        );
+        final list = vpnLocationController.vpnFreeServerAvailableList;
+        return VpnLocationCardWidget(vpnInfo: list[index]);
       },
     );
   }
